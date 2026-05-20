@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🌹 수찬의 향기 🌹</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        body {
+            background: radial-gradient(circle, #ff007f, #7f00ff, #00ffff);
+            background-size: 400% 400%;
+            animation: gradientBG 2s ease infinite;
+            color: #fff;
+            font-family: '궁서', 'Gungsuh', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            text-align: center;
+        }
+        #troll-btn {
+            position: absolute;
+            padding: 25px 30px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            background-color: #ff00ff;
+            color: yellow;
+            border: 8px outset gold;
+            cursor: pointer;
+            z-index: 50;
+            box-shadow: 5px 5px 0px #000;
+        }
+        #main-content {
+            display: none;
+            width: 90%;
+            max-width: 400px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.85);
+            border: 5px double #00ff00;
+            padding: 20px;
+            border-radius: 30px;
+        }
+        .flower-title {
+            font-size: 1.8rem;
+            color: #ffff00;
+            text-shadow: 2px 2px 0px red;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        .photo-frame {
+            width: 260px;
+            height: 360px;
+            border: 8px solid lime;
+            overflow: hidden;
+            animation: spin 3s linear infinite;
+        }
+        .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <button id="troll-btn" onmouseover="escapeBtn()">🌹 수찬이 냄새 맡기 🌹</button>
+
+    <div id="main-content">
+        <div class="flower-title">
+            ✨ 향기로운 수찬은...<br>늠름하게 핀다... ✨
+        </div>
+        
+        <div class="photo-frame">
+            <img src="photo2.jpg" alt="늠름수찬">
+        </div>
+
+        <p style="color: #ff00ff; font-size: 1.1rem; margin-top: 15px; font-weight: bold;">
+            🌹 늠름함 게이지 100% 충전 완료 🌹
+        </p>
+        
+        <canvas id="turtle-canvas" width="520" height="220" style="display:none; margin-top: 20px; border: 4px solid #00ff00; border-radius: 20px; background: black;"></canvas>
+        <p id="drawing-status" style="color: #ffcc00; font-size: 1rem; margin-top: 12px; display:none;">🐢 터틀이 글씨를 쓰고 있어요...</p>
+
+        <button onclick="triggerPythonMission()" style="margin-top: 15px; padding: 12px 20px; font-size: 1rem; font-weight: bold; background: yellow; color: black; border-radius: 10px; cursor: pointer;">
+            🔥 최종 응원 쓰기 시작하기 (클릭)
+        </button>
+    </div>
+
+    <script>
+        let escapeCount = 0;
+        const btn = document.getElementById('troll-btn');
+
+        // 가운데 초기 배치
+        btn.style.left = (window.innerWidth/2 - 125) + 'px';
+        btn.style.top = (window.innerHeight/2 - 40) + 'px';
+
+        function escapeBtn() {
+            if (escapeCount < 5) {
+                const x = Math.random() * (window.innerWidth - 250);
+                const y = Math.random() * (window.innerHeight - 100);
+                btn.style.left = x + 'px';
+                btn.style.top = y + 'px';
+                escapeCount++;
+            } else {
+                alert("킁킁... 수찬이에게서 늠름한 향기가 난다!");
+                btn.style.display = 'none';
+                document.getElementById('main-content').style.display = 'flex';
+            }
+        }
+
+        btn.addEventListener('touchstart', (e) => { e.preventDefault(); escapeBtn(); });
+
+        function triggerPythonMission() {
+            const canvas = document.getElementById('turtle-canvas');
+            const status = document.getElementById('drawing-status');
+            canvas.style.display = 'block';
+            status.style.display = 'block';
+            canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+            startTurtleDrawing(canvas);
+        }
+
+        function startTurtleDrawing(canvas) {
+            const ctx = canvas.getContext('2d');
+            const lines = [
+                '수찬아 힘내! 💪',
+                '항상 응원함'
+            ];
+            const lineHeight = 60;
+            const startX = 40;
+            const startY = 90;
+            const turtle = { x: startX, y: startY - 20 };
+            let lineIndex = 0;
+            let charIndex = 0;
+            let tick = 0;
+
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.font = '48px Gungsuh, serif';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = '#00ff00';
+            ctx.shadowColor = '#7fff00';
+            ctx.shadowBlur = 15;
+
+            function drawTurtle() {
+                ctx.save();
+                ctx.fillStyle = '#ffff00';
+                ctx.shadowColor = '#fff';
+                ctx.shadowBlur = 12;
+                ctx.beginPath();
+                ctx.arc(turtle.x, turtle.y, 12, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            function render() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#000';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#00ff00';
+                ctx.shadowColor = '#7fff00';
+                ctx.shadowBlur = 15;
+
+                for (let i = 0; i < lines.length; i++) {
+                    const text = lines[i];
+                    const visible = i < lineIndex ? text : text.slice(0, charIndex);
+                    ctx.fillText(visible, startX, startY + i * lineHeight);
+                }
+
+                const currentText = lines[lineIndex].slice(0, charIndex);
+                const textWidth = ctx.measureText(currentText).width;
+                turtle.x = startX + textWidth + 18;
+                turtle.y = startY + lineIndex * lineHeight - 8;
+                drawTurtle();
+            }
+
+            function step() {
+                tick++;
+                if (tick % 5 === 0) {
+                    charIndex++;
+                    if (charIndex > lines[lineIndex].length) {
+                        charIndex = 0;
+                        lineIndex++;
+                        if (lineIndex >= lines.length) {
+                            clearInterval(animation);
+                            document.getElementById('drawing-status').textContent = '지나눈나가';
+                            return;
+                        }
+                    }
+                }
+                render();
+            }
+
+            const animation = setInterval(step, 80);
+        }
+    </script>
+</body>
+</html>
